@@ -19,8 +19,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -182,6 +185,41 @@ class MasterReplicaTest extends AbstractRedisClientTest {
         assertThat(connection.sync().clientGetname()).isEqualTo(masterURI.getClientName());
 
         connection.close();
+    }
+
+    @Test
+    void notARealTestButJustShowingTheFunctionality() {
+        // Not a real test yet, just for showing interface...
+
+        final List<RedisURI> uris = new ArrayList<>();
+        uris.add(RedisURI.create("Some master URI"));
+        uris.add(RedisURI.create("Some replica URI"));
+        uris.add(RedisURI.create("Another replica URI"));
+
+        Supplier<Collection<RedisNodeDescription>> nodeSupplier = new Supplier<Collection<RedisNodeDescription>>() {
+
+            StaticMasterReplicaTopologyProvider topologyProvider = new StaticMasterReplicaTopologyProvider(client, uris);
+
+            @Override
+            public Collection<RedisNodeDescription> get() {
+                return topologyProvider.getNodes();
+            }
+        };
+
+        connection.reloadNodes(
+                nodeSupplier
+        );
+
+        uris.add(RedisURI.create("Some other replica URI in the future"));
+
+        connection.reloadNodes(
+                nodeSupplier
+        );
+
+        // Perhaps we just want to trigger a reload on the nodes manually as we know the topology changed
+        connection.reloadNodes(
+                nodeSupplier
+        );
     }
 
     static String replicaCall(StatefulRedisMasterReplicaConnection<String, String> connection) {
