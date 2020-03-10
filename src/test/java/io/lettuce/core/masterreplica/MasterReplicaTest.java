@@ -196,6 +196,8 @@ class MasterReplicaTest extends AbstractRedisClientTest {
         uris.add(RedisURI.create("Some replica URI"));
         uris.add(RedisURI.create("Another replica URI"));
 
+        // This technically will work, but I would go further and provide some topology provider that takes an explicit
+        // Redis uri provider in it's construction to clean things up or something of the form.
         Supplier<Collection<RedisNodeDescription>> nodeSupplier = new Supplier<Collection<RedisNodeDescription>>() {
 
             StaticMasterReplicaTopologyProvider topologyProvider = new StaticMasterReplicaTopologyProvider(client, uris);
