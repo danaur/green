@@ -18,13 +18,16 @@ package io.lettuce.core.masterslave;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ReadFrom;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.reactive.RedisReactiveCommands;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.lettuce.core.masterreplica.StatefulRedisMasterReplicaConnection;
+import io.lettuce.core.models.role.RedisNodeDescription;
 import io.lettuce.core.protocol.RedisCommand;
 import io.lettuce.core.resource.ClientResources;
 
@@ -132,4 +135,10 @@ class MasterSlaveConnectionWrapper<K, V> implements StatefulRedisMasterSlaveConn
     public void flushCommands() {
         delegate.flushCommands();
     }
+
+    @Override
+    public void reloadNodes(Supplier<Collection<RedisNodeDescription>> nodeProvider) {
+        delegate.reloadNodes(nodeProvider);
+    }
+
 }

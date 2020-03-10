@@ -17,13 +17,16 @@ package io.lettuce.core.masterreplica;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 import io.lettuce.core.ReadFrom;
 import io.lettuce.core.RedisChannelWriter;
 import io.lettuce.core.RedisException;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.internal.LettuceAssert;
 import io.lettuce.core.masterreplica.MasterReplicaConnectionProvider.Intent;
+import io.lettuce.core.models.role.RedisNodeDescription;
 import io.lettuce.core.protocol.ConnectionFacade;
 import io.lettuce.core.protocol.ProtocolKeyword;
 import io.lettuce.core.protocol.RedisCommand;
@@ -274,5 +277,11 @@ class MasterReplicaChannelWriter implements RedisChannelWriter {
 
     private boolean isEndTransaction(ProtocolKeyword command) {
         return command.name().equals("EXEC") || command.name().equals("DISCARD");
+    }
+
+    public void reloadNodes(Supplier<Collection<RedisNodeDescription>> nodeDescriptions) {
+        getMasterReplicaConnectionProvider().setKnownNodes(
+                nodeDescriptions.get()
+        );
     }
 }

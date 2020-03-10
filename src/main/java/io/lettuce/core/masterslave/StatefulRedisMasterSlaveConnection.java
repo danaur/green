@@ -16,7 +16,12 @@
 package io.lettuce.core.masterslave;
 
 import io.lettuce.core.ReadFrom;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.masterreplica.StatefulRedisMasterReplicaConnection;
+import io.lettuce.core.models.role.RedisNodeDescription;
+
+import java.util.Collection;
+import java.util.function.Supplier;
 
 /**
  * Redis Master-Slave connection. The connection allows slave reads by setting {@link ReadFrom}.
@@ -45,4 +50,6 @@ public interface StatefulRedisMasterSlaveConnection<K, V> extends StatefulRedisM
      * @return the read from setting
      */
     ReadFrom getReadFrom();
+
+    void reloadNodes(Supplier<Collection<RedisNodeDescription>> nodeProvider);
 }

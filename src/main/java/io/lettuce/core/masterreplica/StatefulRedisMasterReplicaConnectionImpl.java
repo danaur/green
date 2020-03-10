@@ -16,10 +16,14 @@
 package io.lettuce.core.masterreplica;
 
 import java.time.Duration;
+import java.util.Collection;
+import java.util.function.Supplier;
 
 import io.lettuce.core.ReadFrom;
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.StatefulRedisConnectionImpl;
 import io.lettuce.core.codec.RedisCodec;
+import io.lettuce.core.models.role.RedisNodeDescription;
 
 /**
  * @author Mark Paluch
@@ -51,5 +55,12 @@ class StatefulRedisMasterReplicaConnectionImpl<K, V> extends StatefulRedisConnec
     @Override
     public MasterReplicaChannelWriter getChannelWriter() {
         return (MasterReplicaChannelWriter) super.getChannelWriter();
+    }
+
+    @Override
+    public void reloadNodes(Supplier<Collection<RedisNodeDescription>> nodeProvider) {
+        getChannelWriter().reloadNodes(
+                nodeProvider
+        );
     }
 }

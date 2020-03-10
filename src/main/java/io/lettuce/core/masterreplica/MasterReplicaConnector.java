@@ -17,6 +17,7 @@ package io.lettuce.core.masterreplica;
 
 import java.util.concurrent.CompletableFuture;
 
+import io.lettuce.core.RedisURI;
 import io.lettuce.core.codec.RedisCodec;
 
 /**
